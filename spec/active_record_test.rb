@@ -16,10 +16,18 @@ RSpec.describe "Post", type: :model do
     expect(@post.id).to eq(1)
   end
 
+  it 'should be able to find all instances in the db' do
+    Post.establish_connection(
+      database: "#{__dir__}/muffin_blog/db/development.sqlite3")
+    post = Post.all.first
+    expect(post).to_not be_nil
+    expect(post.id).to eq(1)
+    expect(post.title).to eq("Blueberry Muffins")
+  end
+
   it 'should be able to find instances in db' do
     Post.establish_connection(
       database: "#{__dir__}/muffin_blog/db/development.sqlite3")
-    results = Post.connection.execute("SELECT * FROM posts")
     @post2 = Post.find(1)
     expect(@post2).to_not be_nil
     expect(@post2.id).to eq(1)
