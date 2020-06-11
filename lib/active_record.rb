@@ -10,22 +10,27 @@ module ActiveRecord
       @attributes = attributes
     end
 
-    def id 
-      @attributes[:id]
+    def method_missing(name, *args)
+      columns = self.class.connection.columns(self.class.table_name)
+      if columns.include?(name)
+        @attributes[name]
+      else
+        super
+      end
     end
 
-    def title
-      @attributes[:title]
+    def self.table_name
+      name.downcase + "s" # returns class name as string
     end
 
     def self.find(id)
       attributes =
-        connection.execute("SELECT * FROM posts WHERE id = #{id.to_i}").first
+        connection.execute("SELECT * FROM #{table_name} WHERE id = #{id.to_i}").first
       new(attributes)
     end
 
     def self.all
-      connection.execute("SELECT * FROM posts").map do |attributes|
+      connection.execute("SELECT * FROM #{table_name}").map do |attributes|
         new(attributes)
       end
     end

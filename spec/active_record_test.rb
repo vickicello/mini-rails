@@ -5,6 +5,8 @@ require "muffin_blog/app/models/post"
 
 RSpec.describe "Post", type: :model do
   before(:each) do
+    Post.establish_connection(
+      database: "#{__dir__}/muffin_blog/db/development.sqlite3")
     @post = Post.new(id: 1, title: "My first post")
   end
 
@@ -17,8 +19,6 @@ RSpec.describe "Post", type: :model do
   end
 
   it 'should be able to find all instances in the db' do
-    Post.establish_connection(
-      database: "#{__dir__}/muffin_blog/db/development.sqlite3")
     post = Post.all.first
     expect(post).to_not be_nil
     expect(post.id).to eq(1)
@@ -26,8 +26,6 @@ RSpec.describe "Post", type: :model do
   end
 
   it 'should be able to find instances in db' do
-    Post.establish_connection(
-      database: "#{__dir__}/muffin_blog/db/development.sqlite3")
     @post2 = Post.find(1)
     expect(@post2).to_not be_nil
     expect(@post2.id).to eq(1)
@@ -35,8 +33,6 @@ RSpec.describe "Post", type: :model do
   end
 
   it 'should have a db connection' do
-    Post.establish_connection(
-      database: "#{__dir__}/muffin_blog/db/development.sqlite3")
     results = Post.connection.execute("SELECT * FROM posts")
     expect(results).to be_an_instance_of(Array)
     row = results.first
