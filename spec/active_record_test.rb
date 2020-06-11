@@ -38,4 +38,13 @@ RSpec.describe "Post", type: :model do
     row = results.first
     expect(row).to have_key(:title)
   end
+
+  it 'should support using where' do
+    relation = Post.where("id = 2").where("title IS NOT NULL")
+    expect(relation.to_sql).to eq(
+      "SELECT * FROM posts WHERE id = 2 AND title IS NOT NULL"
+    )
+    # post = relation.first
+    # expect(post.id).to eq(2)
+  end
 end
